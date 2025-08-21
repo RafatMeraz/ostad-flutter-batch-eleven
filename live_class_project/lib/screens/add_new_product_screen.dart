@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:live_class_project/widgets/snackbar_message.dart';
 
 class AddNewProductScreen extends StatefulWidget {
   const AddNewProductScreen({super.key});
@@ -8,6 +12,7 @@ class AddNewProductScreen extends StatefulWidget {
 }
 
 class _AddNewProductScreenState extends State<AddNewProductScreen> {
+  bool _addProductInProgress = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameTEController = TextEditingController();
   final TextEditingController _codeTEController = TextEditingController();
@@ -34,6 +39,12 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                     hintText: 'Product name',
                     labelText: 'Product name',
                   ),
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true) {
+                      return 'Enter your value';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: _codeTEController,
@@ -42,6 +53,12 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                     hintText: 'Product code',
                     labelText: 'Product code',
                   ),
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true) {
+                      return 'Enter your value';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: _quantityTEController,
@@ -51,6 +68,12 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                     hintText: 'Quantity',
                     labelText: 'Quantity',
                   ),
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true) {
+                      return 'Enter your value';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: _priceTEController,
@@ -60,6 +83,12 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                     hintText: 'Unit price',
                     labelText: 'Unit price',
                   ),
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true) {
+                      return 'Enter your value';
+                    }
+                    return null;
+                  },
                 ),
                 TextFormField(
                   controller: _imageUrlTEController,
@@ -67,15 +96,85 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                     hintText: 'Image Url',
                     labelText: 'Image Url',
                   ),
+                  validator: (String? value) {
+                    if (value?.trim().isEmpty ?? true) {
+                      return 'Enter your value';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 8),
-                FilledButton(onPressed: () {}, child: Text('Add Product')),
+                Visibility(
+                  visible: _addProductInProgress == false,
+                  replacement: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  child: FilledButton(
+                    onPressed: _onTapAddProductButton,
+                    child: Text('Add Product'),
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _onTapAddProductButton() async {
+    if (_formKey.currentState!.validate() == false) {
+      return;
+    }
+
+    _addProductInProgress = true;
+    setState(() {});
+    // Prepare URI to request
+    Uri uri = Uri.parse('http://35.73.30.144:2008/api/v1/CreateProduct');
+    // Prepare data
+    int totalPrice = int.parse(_priceTEController.text) *
+        int.parse(_quantityTEController.text);
+    Map<String, dynamic> requestBody = {
+      "ProductName": _nameTEController.text,
+      "ProductCode": int.parse(_codeTEController.text),
+      "Img": _imageUrlTEController.text,
+      "Qty":  int.parse(_quantityTEController.text),
+      "UnitPrice":  int.parse(_priceTEController.text),
+      "TotalPrice": totalPrice
+    };
+    // Request with data
+    Response response = await post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonEncode(requestBody),
+    );
+    print(response.statusCode);
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      final decodedJson = jsonDecode(response.body);
+      if (decodedJson['status'] == 'success') {
+        _clearTextFields();
+        showSnackBarMessage(context, 'Product created successfully');
+      } else {
+        String errorMessage = decodedJson['data'];
+
+        showSnackBarMessage(context, errorMessage);
+      }
+    }
+
+    _addProductInProgress = false;
+    setState(() {});
+  }
+
+  void _clearTextFields() {
+    _nameTEController.clear();
+    _codeTEController.clear();
+    _priceTEController.clear();
+    _quantityTEController.clear();
+    _imageUrlTEController.clear();
   }
 
   @override
