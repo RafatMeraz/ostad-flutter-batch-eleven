@@ -69,7 +69,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView.separated(
           itemCount: _productList.length,
           itemBuilder: (context, index) {
-            return ProductItem(product: _productList[index]);
+            return ProductItem(
+              product: _productList[index],
+              refreshProductList: () {
+                _getProductList();
+              },
+            );
           },
           separatorBuilder: (context, index) {
             return Divider(indent: 70);
