@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:live_class_project/models/product_model.dart';
 
 class UpdateProductScreen extends StatefulWidget {
-  const UpdateProductScreen({super.key});
+  const UpdateProductScreen({super.key, required this.product});
+
+  final ProductModel product;
 
   @override
   State<UpdateProductScreen> createState() => _UpdateProductScreenState();
@@ -14,6 +17,16 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
   final TextEditingController _priceTEController = TextEditingController();
   final TextEditingController _quantityTEController = TextEditingController();
   final TextEditingController _imageUrlTEController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameTEController.text = widget.product.name;
+    _codeTEController.text = widget.product.code.toString();
+    _quantityTEController.text = widget.product.quantity.toString();
+    _priceTEController.text = widget.product.unitPrice.toString();
+    _imageUrlTEController.text = widget.product.image;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +82,21 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                FilledButton(onPressed: () {}, child: Text('Update')),
+                FilledButton(onPressed: _updateProduct, child: Text('Update')),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _updateProduct() async {
+    if (_formKey.currentState!.validate() == false) {
+      return;
+    }
+
+    // TODO: CALL API TO UPDATE PRODUCT
   }
 
   @override

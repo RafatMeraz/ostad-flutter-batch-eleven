@@ -67,7 +67,9 @@ class _ProductItemState extends State<ProductItem> {
             } else if (selectedOption == ProductOptions.update) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => UpdateProductScreen()),
+                MaterialPageRoute(builder: (context) => UpdateProductScreen(
+                  product: widget.product,
+                )),
               );
             }
           },
