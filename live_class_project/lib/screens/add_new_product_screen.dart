@@ -135,11 +135,11 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
     int totalPrice = int.parse(_priceTEController.text) *
         int.parse(_quantityTEController.text);
     Map<String, dynamic> requestBody = {
-      "ProductName": _nameTEController.text,
-      "ProductCode": int.parse(_codeTEController.text),
-      "Img": _imageUrlTEController.text,
-      "Qty":  int.parse(_quantityTEController.text),
-      "UnitPrice":  int.parse(_priceTEController.text),
+      "ProductName": _nameTEController.text.trim(),
+      "ProductCode": int.parse(_codeTEController.text.trim()),
+      "Img": _imageUrlTEController.text.trim(),
+      "Qty":  int.parse(_quantityTEController.text.trim()),
+      "UnitPrice":  int.parse(_priceTEController.text.trim()),
       "TotalPrice": totalPrice
     };
     // Request with data

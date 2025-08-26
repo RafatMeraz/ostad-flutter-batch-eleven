@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:live_class_project/models/product_model.dart';
 import 'package:live_class_project/screens/update_product_screen.dart';
 
 class ProductItem extends StatelessWidget {
-  const ProductItem({super.key});
+  const ProductItem({super.key, required this.product});
+
+  final ProductModel product;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CircleAvatar(),
-      title: Text('Product name'),
+      leading: Image.network(
+        width: 30,
+        product.image,
+        errorBuilder: (_, __, ___) {
+          return Icon(Icons.error_outline, size: 30,);
+        },
+      ),
+      title: Text(product.name),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Code: 239293823'),
+          Text('Code: ${product.code}'),
           Row(
             spacing: 16,
-            children: [Text('Quantity: 5'), Text('Unit Price: 500')],
+            children: [
+              Text('Quantity: ${product.quantity}'),
+              Text('Unit Price: ${product.unitPrice}'),
+            ],
           ),
         ],
       ),
