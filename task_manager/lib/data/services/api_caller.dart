@@ -51,7 +51,10 @@ class ApiCaller {
       Uri uri = Uri.parse(url);
 
       _logRequest(url, body: body);
-      Response response = await post(uri);
+      Response response = await post(uri,
+          headers: {'content-type': 'application/json'},
+          body: jsonEncode(body),
+      );
       _logResponse(url, response);
 
       final int statusCode = response.statusCode;
