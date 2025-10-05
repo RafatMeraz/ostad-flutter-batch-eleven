@@ -10,4 +10,7 @@ class Urls {
 
   static String updateTaskStatusUrl(String id, String newStatus) =>
       '$_baseUrl/updateTaskStatus/$id/$newStatus';
+
+  static String deleteTaskUrl(String id) => '$_baseUrl/deleteTask/$id';
+  static const String updateProfileUrl = '$_baseUrl/ProfileUpdate';
 }

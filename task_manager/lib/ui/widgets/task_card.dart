@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:task_manager/data/models/task_model.dart';
 import 'package:task_manager/data/services/api_caller.dart';
 import 'package:task_manager/data/utils/urls.dart';
+import 'package:task_manager/ui/widgets/centered_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
 
 class TaskCard extends StatefulWidget {
@@ -20,6 +21,7 @@ class TaskCard extends StatefulWidget {
 
 class _TaskCardState extends State<TaskCard> {
   bool _changeStatusInProgress = false;
+  bool _deleteInProgress = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +50,15 @@ class _TaskCardState extends State<TaskCard> {
                 ),
               ),
               Spacer(),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.delete, color: Colors.grey),
+              Visibility(
+                visible: _deleteInProgress == false,
+                replacement: CenteredProgressIndicator(),
+                child: IconButton(
+                  onPressed: () {
+                    _deleteTask();
+                  },
+                  icon: Icon(Icons.delete, color: Colors.grey),
+                ),
               ),
               Visibility(
                 visible: _changeStatusInProgress == false,
@@ -135,6 +143,21 @@ class _TaskCardState extends State<TaskCard> {
       url: Urls.updateTaskStatusUrl(widget.taskModel.id, status),
     );
     _changeStatusInProgress = false;
+    setState(() {});
+    if (response.isSuccess) {
+      widget.refreshParent();
+    } else {
+      showSnackBarMessage(context, response.errorMessage!);
+    }
+  }
+
+  Future<void> _deleteTask() async {
+    _deleteInProgress = true;
+    setState(() {});
+    final ApiResponse response = await ApiCaller.getRequest(
+      url: Urls.deleteTaskUrl(widget.taskModel.id),
+    );
+    _deleteInProgress = false;
     setState(() {});
     if (response.isSuccess) {
       widget.refreshParent();
