@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-class CounterNotifier extends ChangeNotifier {
+class CounterController extends ChangeNotifier {
   int counter = 0;
 
   void increment() {

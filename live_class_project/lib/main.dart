@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:live_class_project/counter_inherited_widget.dart';
-import 'package:live_class_project/counter_notifier.dart';
-import 'package:live_class_project/screens/home_screen.dart';
+import 'package:live_class_project/counter_controller.dart';
+import 'package:live_class_project/counter_controller_inherited_widget.dart';
+import 'home_screen.dart';
 
 void main() {
   runApp(CrudApp());
@@ -15,12 +15,14 @@ class CrudApp extends StatefulWidget {
 }
 
 class _CrudAppState extends State<CrudApp> {
+  CounterController counterController = CounterController();
+
   @override
   Widget build(BuildContext context) {
-    return CounterInheritedWidget(
-      counterNotifier: CounterNotifier(),
+    return CounterControllerInheritedWidget(
+      counterController: counterController,
       child: MaterialApp(
-        title: 'Crud App',
+        title: 'Counter App',
         theme: ThemeData(colorSchemeSeed: Colors.blue),
         home: HomeScreen(),
       ),
