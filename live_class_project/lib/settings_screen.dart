@@ -1,46 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:live_class_project/theme_controller.dart';
+import 'package:provider/provider.dart';
 
 import 'counter_controller.dart';
-import 'counter_controller_inherited_widget.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  @override
   Widget build(BuildContext context) {
-    final CounterController counterController =
-        CounterControllerInheritedWidget.of(context)!.counterController;
-
     return Scaffold(
       appBar: AppBar(title: Text('Settings')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ListenableBuilder(
-              listenable: counterController,
-              builder: (context, child) {
-                return Text('${counterController.counter}');
+            Consumer<CounterController>(
+              builder: (context, controller, child) {
+                return Text('${controller.counter}');
               },
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: counterController.increment,
+                  onPressed: context.read<CounterController>().increment,
                   icon: Icon(Icons.add),
                 ),
                 IconButton(
-                  onPressed: counterController.decrement,
+                  onPressed: context.read<CounterController>().decrement,
                   icon: Icon(Icons.remove),
                 ),
               ],
             ),
+            IconButton(onPressed: () {
+              context.read<ThemeController>().toggleThemeMode();
+            }, icon: Icon(Icons.sunny)),
           ],
         ),
       ),

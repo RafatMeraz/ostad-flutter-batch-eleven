@@ -1,30 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:live_class_project/counter_controller.dart';
-import 'package:live_class_project/counter_controller_inherited_widget.dart';
+import 'package:provider/provider.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    final CounterController counterController =
-        CounterControllerInheritedWidget.of(context)!.counterController;
-
     return Scaffold(
       appBar: AppBar(title: Text('Profile')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ListenableBuilder(
-              listenable: counterController,
-              builder: (context, child) {
+            Consumer<CounterController>(
+              builder: (context, counterController, child) {
                 return Text('${counterController.counter}');
               },
             ),
@@ -32,11 +22,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  onPressed: counterController.increment,
+                  onPressed: context.read<CounterController>().increment,
                   icon: Icon(Icons.add),
                 ),
                 IconButton(
-                  onPressed: counterController.decrement,
+                  onPressed: context.read<CounterController>().decrement,
                   icon: Icon(Icons.remove),
                 ),
               ],
