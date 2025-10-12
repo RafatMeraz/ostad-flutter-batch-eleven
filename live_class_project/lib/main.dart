@@ -1,43 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:live_class_project/counter_controller.dart';
-import 'package:live_class_project/theme_controller.dart';
+import 'package:live_class_project/product_list_provider.dart';
+import 'package:live_class_project/product_list_screen.dart';
 import 'package:provider/provider.dart';
-import 'home_screen.dart';
 
 void main() {
-  runApp(CrudApp());
+  runApp(ProductListApp());
 }
 
-class CrudApp extends StatefulWidget {
-  const CrudApp({super.key});
-
-  @override
-  State<CrudApp> createState() => _CrudAppState();
-}
-
-class _CrudAppState extends State<CrudApp> {
-  CounterController counterController = CounterController();
+class ProductListApp extends StatelessWidget {
+  const ProductListApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeController()),
-        ChangeNotifierProvider(create: (_) => counterController),
+        ChangeNotifierProvider(create: (_) => ProductListProvider()),
       ],
-      child: Consumer<ThemeController>(
-        builder: (context, themeController, _) {
-          return MaterialApp(
-            title: 'Counter App',
-            theme: ThemeData(
-              brightness: Brightness.light,
-              colorSchemeSeed: Colors.blue,
-            ),
-            home: HomeScreen(),
-            themeMode: themeController.themeMode,
-            darkTheme: ThemeData(brightness: Brightness.dark),
-          );
-        },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: ProductListScreen(),
       ),
     );
   }
