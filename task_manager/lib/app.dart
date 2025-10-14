@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:task_manager/ui/controllers/login_provider.dart';
 import 'package:task_manager/ui/screens/login_screen.dart';
 import 'package:task_manager/ui/screens/main_nav_bar_holder_screen.dart';
 import 'package:task_manager/ui/screens/sign_up_screen.dart';
