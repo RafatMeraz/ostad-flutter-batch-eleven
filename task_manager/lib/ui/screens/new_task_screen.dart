@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager/data/models/task_model.dart';
+import 'package:provider/provider.dart';
 import 'package:task_manager/data/models/task_status_count_model.dart';
 import 'package:task_manager/data/services/api_caller.dart';
 import 'package:task_manager/data/utils/urls.dart';
+import 'package:task_manager/ui/controllers/new_task_list_provider.dart';
 import 'package:task_manager/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager/ui/widgets/centered_progress_indicator.dart';
 import 'package:task_manager/ui/widgets/snack_bar_message.dart';
@@ -19,15 +20,13 @@ class NewTaskScreen extends StatefulWidget {
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
   bool _getTaskStatusCountInProgress = false;
-  bool _getNewTaskInProgress = false;
   List<TaskStatusCountModel> _taskStatusCountList = [];
-  List<TaskModel> _newTaskList = [];
 
   @override
   void initState() {
     super.initState();
     _getAllTaskStatusCount();
-    _getAllNewTasks();
+    context.read<NewTaskListProvider>().getNewTasks();
   }
 
   Future<void> _getAllTaskStatusCount() async {
@@ -46,25 +45,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
       showSnackBarMessage(context, response.errorMessage!);
     }
     _getTaskStatusCountInProgress = false;
-    setState(() {});
-  }
-
-  Future<void> _getAllNewTasks() async {
-    _getNewTaskInProgress = true;
-    setState(() {});
-    final ApiResponse response = await ApiCaller.getRequest(
-      url: Urls.newTaskListUrl,
-    );
-    if (response.isSuccess) {
-      List<TaskModel> list = [];
-      for (Map<String, dynamic> jsonData in response.responseData['data']) {
-        list.add(TaskModel.fromJson(jsonData));
-      }
-      _newTaskList = list;
-    } else {
-      showSnackBarMessage(context, response.errorMessage!);
-    }
-    _getNewTaskInProgress = false;
     setState(() {});
   }
 
@@ -97,23 +77,27 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
               ),
             ),
             Expanded(
-              child: Visibility(
-                visible: _getNewTaskInProgress == false,
-                replacement: CenteredProgressIndicator(),
-                child: ListView.separated(
-                  itemCount: _newTaskList.length,
-                  itemBuilder: (context, index) {
-                    return TaskCard(
-                      taskModel: _newTaskList[index],
-                      refreshParent: () {
-                        _getAllNewTasks();
+              child: Consumer<NewTaskListProvider>(
+                builder: (context, newTaskListProvider, _) {
+                  return Visibility(
+                    visible: newTaskListProvider.getNewTasksProgress == false,
+                    replacement: CenteredProgressIndicator(),
+                    child: ListView.separated(
+                      itemCount: newTaskListProvider.newTaskList.length,
+                      itemBuilder: (context, index) {
+                        return TaskCard(
+                          taskModel: newTaskListProvider.newTaskList[index],
+                          refreshParent: () {
+                            context.read<NewTaskListProvider>().getNewTasks();
+                          },
+                        );
                       },
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: 8);
-                  },
-                ),
+                      separatorBuilder: (context, index) {
+                        return SizedBox(height: 8);
+                      },
+                    ),
+                  );
+                }
               ),
             ),
           ],
