@@ -5,6 +5,8 @@ import 'package:firebase_live_score_app/sign_up_screen.dart';
 import 'package:flutter/material.dart';
 
 class FootballLiveScoreApp extends StatefulWidget {
+  static GlobalKey<NavigatorState> navigator = GlobalKey<NavigatorState>();
+
   const FootballLiveScoreApp({super.key});
 
   @override
@@ -15,6 +17,7 @@ class _FootballLiveScoreAppState extends State<FootballLiveScoreApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: FootballLiveScoreApp.navigator,
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, asyncSnapshot) {

@@ -1,4 +1,8 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
+
+import 'app.dart';
+import 'notification_navigator.dart';
 
 class FCMService {
   static Future<void> initialize() async {
@@ -26,6 +30,11 @@ class FCMService {
     print(message.data);
     print(message.notification?.title);
     print(message.notification?.body);
+    bool shouldNavigate = message.data['should_navigate'] ?? false;
+    if (shouldNavigate) {
+      NotificationNavigator.handleNavigation(message.data['route_name']);
+      // Navigator.pushNamed(FootballLiveScoreApp.navigator.currentContext!, message.data['route_name']);
+    }
   }
 
   static Future<String?> getToken() async {
