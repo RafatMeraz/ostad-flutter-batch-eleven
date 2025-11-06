@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -135,8 +136,15 @@ class _HomeScreenState extends State<HomeScreen> {
               .doc('usavschina')
               .delete();
 
-          FirebaseCrashlytics.instance.recordError(Exception('Another exception'), null);
+          FirebaseCrashlytics.instance.recordError(
+            Exception('Another exception'),
+            null,
+          );
           // throw Exception('My new exception');
+          FirebaseAnalytics.instance.logEvent(
+            name: 'tap-add-button',
+            parameters: {},
+          );
         },
       ),
     );
