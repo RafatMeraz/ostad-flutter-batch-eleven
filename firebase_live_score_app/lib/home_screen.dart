@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -42,6 +43,12 @@ class _HomeScreenState extends State<HomeScreen> {
   //   _inProgress = false;
   //   setState(() {});
   // }
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseCrashlytics.instance.log('Entered home screen');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +134,9 @@ class _HomeScreenState extends State<HomeScreen> {
               .collection('football')
               .doc('usavschina')
               .delete();
+
+          FirebaseCrashlytics.instance.recordError(Exception('Another exception'), null);
+          // throw Exception('My new exception');
         },
       ),
     );
