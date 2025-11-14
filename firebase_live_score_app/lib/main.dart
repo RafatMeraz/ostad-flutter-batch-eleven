@@ -5,6 +5,7 @@ import 'package:firebase_live_score_app/fcm_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
@@ -12,6 +13,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  final RequestConfiguration requestConfiguration = RequestConfiguration(
+    testDeviceIds: ['YOUR_DEVICE_ID_COPIED_FROM_LOGS'],
+  );
+
+  MobileAds.instance.initialize();
+
   FCMService.initialize();
   print(await FCMService.getToken());
 
