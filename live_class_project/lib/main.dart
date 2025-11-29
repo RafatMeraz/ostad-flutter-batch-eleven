@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:live_class_project/gps_home_screen.dart';
 import 'package:live_class_project/home_screen.dart';
 
 void main() {
@@ -11,7 +12,7 @@ class MapApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: HomeScreen(),
+      home: GpsHomeScreen(),
     );
   }
 }
