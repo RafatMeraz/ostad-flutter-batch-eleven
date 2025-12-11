@@ -1,4 +1,5 @@
 import 'package:crafty_bay/app/app_colors.dart';
+import 'package:crafty_bay/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:crafty_bay/features/auth/presentation/widgets/app_logo.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -129,5 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _onTapSignUpButton() {}
 
-  void _onTapSignInButton() {}
+  void _onTapSignInButton() {
+    Navigator.pushNamed(context, SignInScreen.name);
+  }
 }
