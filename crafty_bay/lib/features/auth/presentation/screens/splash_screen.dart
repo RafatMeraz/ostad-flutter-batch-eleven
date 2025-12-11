@@ -3,6 +3,8 @@ import 'package:crafty_bay/features/auth/presentation/screens/sign_up_screen.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../widgets/app_logo.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -36,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: .center,
           children: [
             Spacer(),
-            SvgPicture.asset(AssetPaths.logoSvg, width: 100),
+            AppLogo(),
             Spacer(),
             CircularProgressIndicator(),
             const SizedBox(height: 16),
