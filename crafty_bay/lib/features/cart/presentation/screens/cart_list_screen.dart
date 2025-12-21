@@ -1,7 +1,9 @@
 import 'package:crafty_bay/app/app_colors.dart';
 import 'package:crafty_bay/app/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../common/presentation/providers/main_nav_container_provider.dart';
 import '../widgets/cart_item.dart';
 
 class CartListScreen extends StatefulWidget {
@@ -16,23 +18,29 @@ class _CartListScreenState extends State<CartListScreen> {
   Widget build(BuildContext context) {
     final textTheme = TextTheme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(title: Text('Carts')),
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const .symmetric(horizontal: 16),
-              child: ListView.builder(
-                itemCount: 3,
-                itemBuilder: (context, index) {
-                  return CartItem();
-                },
+    return PopScope(
+      onPopInvokedWithResult: (_, __) {
+        context.read<MainNavContainerProvider>().backToHome();
+      },
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(title: Text('Carts')),
+        body: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const .symmetric(horizontal: 16),
+                child: ListView.builder(
+                  itemCount: 3,
+                  itemBuilder: (context, index) {
+                    return CartItem();
+                  },
+                ),
               ),
             ),
-          ),
-          _buildTotalPriceAndCheckoutSection(textTheme),
-        ],
+            _buildTotalPriceAndCheckoutSection(textTheme),
+          ],
+        ),
       ),
     );
   }

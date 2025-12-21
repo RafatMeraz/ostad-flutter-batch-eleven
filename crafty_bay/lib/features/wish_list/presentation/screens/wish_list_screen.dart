@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../common/presentation/providers/main_nav_container_provider.dart';
 import '../../../common/presentation/widgets/product_card.dart';
 
 class WishListScreen extends StatefulWidget {
@@ -14,20 +16,26 @@ class WishListScreen extends StatefulWidget {
 class _WishListScreenState extends State<WishListScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Wishlist')),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-          itemCount: 10,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    return PopScope(
+      onPopInvokedWithResult: (_, __) {
+        context.read<MainNavContainerProvider>().backToHome();
+      },
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(title: Text('Wishlist')),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GridView.builder(
+            itemCount: 10,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
               crossAxisSpacing: 2,
-              mainAxisSpacing: 8
+              mainAxisSpacing: 8,
+            ),
+            itemBuilder: (context, index) {
+              return FittedBox(child: ProductCard());
+            },
           ),
-          itemBuilder: (context, index) {
-            return FittedBox(child: ProductCard());
-          },
         ),
       ),
     );
