@@ -47,7 +47,7 @@ class NetworkCaller {
           isSuccess: false,
           responseCode: statusCode,
           responseData: decodedData,
-          errorMessage: decodedData['data'],
+          errorMessage: decodedData['msg'], // TODO: Propose a solution to make this component independent
         );
       }
     } on Exception catch (e) {
