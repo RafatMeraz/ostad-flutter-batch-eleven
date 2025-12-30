@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         scrollDirection: Axis.horizontal,
         itemCount: 10,
         itemBuilder: (context, index) {
-          return CategoryCard();
+          // return CategoryCard();
         },
         separatorBuilder: (context, index) => SizedBox(width: 8),
       ),
