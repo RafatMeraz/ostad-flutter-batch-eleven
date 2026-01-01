@@ -1,5 +1,7 @@
 import 'package:crafty_bay/app/asset_paths.dart';
+import 'package:crafty_bay/features/category/presentation/providers/category_list_provider.dart';
 import 'package:crafty_bay/features/common/presentation/providers/main_nav_container_provider.dart';
+import 'package:crafty_bay/features/common/presentation/widgets/center_circular_progress.dart';
 import 'package:crafty_bay/features/home/presentation/widgets/home_carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -67,13 +69,25 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildCategoryList() {
     return SizedBox(
       height: 85,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          // return CategoryCard();
+      child: Consumer<CategoryListProvider>(
+        builder: (context, categoryListProvider, _) {
+          if (categoryListProvider.initialLoading) {
+            return CenterCircularProgress();
+          }
+
+          return ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: categoryListProvider.categoryList.length > 10
+                ? 10
+                : categoryListProvider.categoryList.length,
+            itemBuilder: (context, index) {
+              return CategoryCard(
+                categoryModel: categoryListProvider.categoryList[index],
+              );
+            },
+            separatorBuilder: (context, index) => SizedBox(width: 8),
+          );
         },
-        separatorBuilder: (context, index) => SizedBox(width: 8),
       ),
     );
   }

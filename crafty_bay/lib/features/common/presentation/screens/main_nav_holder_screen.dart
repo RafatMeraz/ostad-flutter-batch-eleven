@@ -1,5 +1,6 @@
 import 'package:crafty_bay/app/app_colors.dart';
 import 'package:crafty_bay/features/cart/presentation/screens/cart_list_screen.dart';
+import 'package:crafty_bay/features/category/presentation/providers/category_list_provider.dart';
 import 'package:crafty_bay/features/common/presentation/providers/main_nav_container_provider.dart';
 import 'package:crafty_bay/features/home/presentation/screens/home_screen.dart';
 import 'package:crafty_bay/features/wish_list/presentation/screens/wish_list_screen.dart';
@@ -24,6 +25,12 @@ class _MainNavHolderScreenState extends State<MainNavHolderScreen> {
     CartListScreen(),
     WishListScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CategoryListProvider>().fetchCategoryList();
+  }
 
   @override
   Widget build(BuildContext context) {
