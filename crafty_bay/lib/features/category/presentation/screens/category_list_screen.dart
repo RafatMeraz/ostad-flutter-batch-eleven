@@ -23,6 +23,10 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
   }
 
   void _loadMoreData() {
+    if (context.read<CategoryListProvider>().moreLoading) {
+      return;
+    }
+
     if (_scrollController.position.extentBefore < 300) {
       context.read<CategoryListProvider>().fetchCategoryList();
     }

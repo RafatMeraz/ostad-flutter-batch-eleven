@@ -4,7 +4,7 @@ NetworkCaller getNetworkCaller() {
   NetworkCaller networkCaller = NetworkCaller(
       headers: {
         'Content-type': 'application/json',
-        'token': 'token',
+        // 'token': 'token',
       },
       onUnauthorize: () {
         // Move to login screen

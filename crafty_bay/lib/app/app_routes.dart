@@ -7,6 +7,8 @@ import 'package:crafty_bay/features/product/presentation/screens/product_details
 import 'package:crafty_bay/features/product/presentation/screens/product_list_by_category_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../features/category/data/models/category_model.dart';
+
 class AppRoutes {
   static Route<dynamic> routes(RouteSettings settings) {
     Widget widget = SizedBox();
@@ -23,7 +25,8 @@ class AppRoutes {
     } else if (settings.name == MainNavHolderScreen.name) {
       widget = MainNavHolderScreen();
     } else if (settings.name == ProductListByCategoryScreen.name) {
-      widget = ProductListByCategoryScreen();
+      final categoryModel = settings.arguments as CategoryModel;
+      widget = ProductListByCategoryScreen(categoryModel: categoryModel);
     } else if (settings.name == ProductDetailsScreen.name) {
       widget = ProductDetailsScreen();
     }

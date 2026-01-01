@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
         scrollDirection: .horizontal,
         itemCount: 10,
         itemBuilder: (context, index) {
-          return ProductCard();
+          // return ProductCard();
         },
       ),
     );

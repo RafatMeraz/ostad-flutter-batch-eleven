@@ -1,14 +1,16 @@
 import 'package:crafty_bay/features/common/presentation/widgets/favourite_button.dart';
+import 'package:crafty_bay/features/product/data/models/product_model.dart';
 import 'package:crafty_bay/features/product/presentation/screens/product_details_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_colors.dart';
-import '../../../../app/asset_paths.dart';
 import '../../../../app/constants.dart';
 import 'rating_view.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key});
+  const ProductCard({super.key, required this.productModel});
+
+  final ProductModel productModel;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,10 @@ class ProductCard extends StatelessWidget {
                   ),
                   color: AppColors.themeColor.withAlpha(30),
                   image: DecorationImage(
-                    image: AssetImage(AssetPaths.dummyImagePng),
+                    image: NetworkImage(
+                      productModel.photo,
+                    ),
+                    fit: .cover,
                   ),
                 ),
               ),
@@ -44,7 +49,7 @@ class ProductCard extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'Nike Shoe RG3434 - New Arrival',
+                      productModel.title,
                       maxLines: 1,
                       style: TextStyle(overflow: .ellipsis),
                     ),
@@ -52,14 +57,14 @@ class ProductCard extends StatelessWidget {
                       mainAxisAlignment: .spaceBetween,
                       children: [
                         Text(
-                          '${Constants.takaSign}234',
+                          '${Constants.takaSign}${productModel.currentPrice}',
                           style: TextStyle(
                             fontWeight: .w600,
                             color: AppColors.themeColor,
                           ),
                         ),
                         RatingView(),
-                        FavouriteButton()
+                        FavouriteButton(),
                       ],
                     ),
                   ],
