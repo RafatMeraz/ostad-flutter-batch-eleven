@@ -100,7 +100,7 @@ class NetworkCaller {
           isSuccess: false,
           responseCode: statusCode,
           responseData: decodedData,
-          errorMessage: decodedData['data'],
+          errorMessage: decodedData['msg'],
         );
       }
     } on Exception catch (e) {

@@ -1,4 +1,5 @@
 import 'package:crafty_bay/app/app_colors.dart';
+import 'package:crafty_bay/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:crafty_bay/features/cart/presentation/screens/cart_list_screen.dart';
 import 'package:crafty_bay/features/category/presentation/providers/category_list_provider.dart';
 import 'package:crafty_bay/features/common/presentation/providers/main_nav_container_provider.dart';
@@ -9,6 +10,8 @@ import 'package:crafty_bay/features/wish_list/presentation/screens/wish_list_scr
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../auth/presentation/providers/auth_controller.dart';
+import '../../../auth/presentation/screens/sign_in_screen.dart';
 import '../../../category/presentation/screens/category_list_screen.dart';
 
 class MainNavHolderScreen extends StatefulWidget {
@@ -45,7 +48,16 @@ class _MainNavHolderScreenState extends State<MainNavHolderScreen> {
             unselectedItemColor: Colors.grey,
             selectedItemColor: AppColors.themeColor,
             currentIndex: mainNavContainerProvider.selectedIndex,
-            onTap: mainNavContainerProvider.changeItem,
+            onTap: (int index) async {
+              if (index == 2 || index == 3) {
+                if (await AuthController.isAlreadyLoggedIn() == false) {
+                  Navigator.pushNamed(context, SignUpScreen.name);
+                  return;
+                }
+              }
+
+              mainNavContainerProvider.changeItem(index);
+            },
             showUnselectedLabels: true,
             items: [
               BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
@@ -64,7 +76,7 @@ class _MainNavHolderScreenState extends State<MainNavHolderScreen> {
             ],
           ),
         );
-      }
+      },
     );
   }
 }

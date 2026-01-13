@@ -1,14 +1,19 @@
 import 'package:crafty_bay/app/app_colors.dart';
 import 'package:crafty_bay/app/constants.dart';
+import 'package:crafty_bay/features/auth/presentation/providers/auth_controller.dart';
+import 'package:crafty_bay/features/auth/presentation/screens/sign_in_screen.dart';
+import 'package:crafty_bay/features/auth/presentation/screens/sign_up_screen.dart';
 import 'package:crafty_bay/features/cart/presentation/widgets/inc_dec_button.dart';
 import 'package:crafty_bay/features/common/presentation/widgets/center_circular_progress.dart';
 import 'package:crafty_bay/features/common/presentation/widgets/rating_view.dart';
+import 'package:crafty_bay/features/common/presentation/widgets/snack_bar_message.dart';
 import 'package:crafty_bay/features/product/presentation/widgets/color_picker.dart';
 import 'package:crafty_bay/features/product/presentation/widgets/product_image_slider.dart';
 import 'package:crafty_bay/features/product/presentation/widgets/size_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../common/presentation/providers/add_to_cart_provider.dart';
 import '../../../common/presentation/widgets/favourite_button.dart';
 import '../providers/product_details_provider.dart';
 
@@ -26,6 +31,7 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final ProductDetailsProvider _productDetailsProvider =
       ProductDetailsProvider();
+  final AddToCartProvider _addToCartProvider = AddToCartProvider();
 
   @override
   void initState() {
@@ -41,8 +47,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text('Product Details')),
-      body: ChangeNotifierProvider(
-        create: (_) => _productDetailsProvider,
+      body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => _productDetailsProvider),
+          ChangeNotifierProvider(create: (_) => _addToCartProvider),
+        ],
         child: Consumer<ProductDetailsProvider>(
           builder: (context, _, _) {
             if (_productDetailsProvider.getProductDetailsInProgress) {
@@ -182,10 +191,36 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
           SizedBox(
             width: 120,
-            child: FilledButton(onPressed: () {}, child: Text('Add to Cart')),
+            child: Consumer<AddToCartProvider>(
+              builder: (context, provider, _) {
+                if (provider.addToCartInProgress) {
+                  return CenterCircularProgress();
+                }
+
+                return FilledButton(
+                  onPressed: _onTaoAddToCartButton,
+                  child: Text('Add to Cart'),
+                );
+              }
+            ),
           ),
         ],
       ),
     );
+  }
+
+  void _onTaoAddToCartButton() async {
+    if (await AuthController.isAlreadyLoggedIn()) {
+      final bool isSuccess = await _addToCartProvider.addToCart(
+        widget.productId,
+      );
+      if (isSuccess) {
+        showSnackBarMessage(context, 'Added to cart!');
+      } else {
+        showSnackBarMessage(context, _addToCartProvider.errorMessage!);
+      }
+    } else {
+      Navigator.pushNamed(context, SignUpScreen.name);
+    }
   }
 }

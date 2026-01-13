@@ -14,6 +14,8 @@ import 'package:provider/provider.dart';
 class CraftyBayApp extends StatefulWidget {
   const CraftyBayApp({super.key});
 
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   State<CraftyBayApp> createState() => _CraftyBayAppState();
 }
@@ -38,6 +40,7 @@ class _CraftyBayAppState extends State<CraftyBayApp> {
           return Consumer<ThemeProvider>(
             builder: (context, themeProvider, child) {
               return MaterialApp(
+                navigatorKey: CraftyBayApp.navigatorKey,
                 initialRoute: SplashScreen.name,
                 onGenerateRoute: AppRoutes.routes,
                 theme: AppTheme.lightTheme,
