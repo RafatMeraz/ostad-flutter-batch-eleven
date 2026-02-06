@@ -1,0 +1,44 @@
+on:
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        description: 'Branch to build from'
+        required: true
+        default: 'dev'
+
+name: "Build & Release"
+jobs:
+  build:
+    name: Build & Release
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch_name }} # Uses your manual input
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.3'
+          channel: 'stable'
+
+      - run: flutter build apk --profile --split-per-abi
+      - run: |
+          flutter build ios --no-codesign
+          cd build/ios/iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
+
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "build/app/outputs/apk/profile/*,build/ios/iphoneos/app.ipa"
+          tag: v1.0.${{ github.run_number }}-${{ github.event.inputs.branch_name }}
+          token: ${{ secrets.TOKEN }}
